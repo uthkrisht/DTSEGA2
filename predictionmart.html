@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>PredictionMart — Trade the Future</title>
+<style>
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Arial,sans-serif;margin:0;background:#0b1020;color:#eef2ff}
+  header{padding:48px 20px;text-align:center;background:linear-gradient(135deg,#111a3a,#0b1020)}
+  h1{font-size:40px;margin:0 0 8px}
+  h2{margin:24px 0 12px;font-size:22px;color:#bcd1ff}
+  p,li{line-height:1.6}
+  .container{max-width:980px;margin:0 auto;padding:24px 20px}
+  .card{background:#121a35;border:1px solid #1e2b5a;border-radius:16px;padding:20px;box-shadow:0 10px 25px rgba(0,0,0,0.25);margin:16px 0}
+  .grid{display:grid;grid-template-columns:1fr;gap:16px}
+  @media(min-width:850px){.grid{grid-template-columns:1fr 1fr}}
+  .muted{color:#c9d6ffcc}
+  .badge{display:inline-block;padding:4px 10px;background:#192658;color:#cfe2ff;border-radius:999px;font-size:12px;margin-right:8px}
+  .btn{background:#3048d0;border:none;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer}
+  .btn:active{transform:translateY(1px)}
+  .hr{height:1px;background:#1f2a55;border:0;margin:24px 0}
+  .widget{background:#0f1633;border:1px solid #26346b;border-radius:14px;padding:16px}
+  input,select{background:#0a1230;border:1px solid #2a3870;color:#eaf0ff;border-radius:10px;padding:8px;width:100%}
+  label{font-size:14px;color:#c7d6ff}
+  .row{display:flex;gap:12px;align-items:center}
+  .row > *{flex:1}
+  .big{font-size:28px}
+  a{color:#9cc2ff}
+  .mono{font-family:ui-monospace,Consolas,Menlo,monospace}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <div><span class="badge">Launch region</span><span class="muted">Dubai • Singapore • India focus</span></div>
+    <h1>PredictionMart</h1>
+    <p class="muted">Trade the world's questions. Prices = probabilities. Transparent. Verifiable. Simple.</p>
+  </div>
+</header>
+
+<main class="container">
+  <section class="card">
+    <h2>Mission</h2>
+    <p>Make probabilistic insight accessible to everyone by turning complex future events into simple, tradable contracts.</p>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h2>How it works</h2>
+      <ol>
+        <li><b>Define an event</b>: e.g., “Will GDP growth in India exceed 7% in FY26?”</li>
+        <li><b>Trade contracts</b>: Buy <i>Yes</i> or <i>No</i>. Each pays $1 if correct.</li>
+        <li><b>Price ↔ Probability</b>: $0.72 ≈ 72% probability.</li>
+        <li><b>Settle</b>: When outcomes are verified, winning shares pay out.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h2>Who it's for</h2>
+      <ul>
+        <li>Macro enthusiasts & researchers</li>
+        <li>Tech & startup operators</li>
+        <li>Policy analysts & traders</li>
+        <li>Educators & students</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="card">
+    <h2>Get started</h2>
+    <ol>
+      <li>Sign up</li>
+      <li>Deposit funds</li>
+      <li>Pick a market and buy shares</li>
+      <li>Track probability changes over time</li>
+    </ol>
+  </div>
+
+  <div class="grid">
+    <div class="card widget">
+      <h2>Custom Widget: Payoff Calculator</h2>
+      <div class="row">
+        <div>
+          <label>Price per share ($0.00–$1.00)</label>
+          <input id="price" type="number" min="0" max="1" step="0.01" value="0.45">
+        </div>
+        <div>
+          <label>Investment amount ($)</label>
+          <input id="amount" type="number" min="1" step="1" value="100">
+        </div>
+      </div>
+      <div class="hr"></div>
+      <p class="muted">If you're right, each share pays $1. We compute shares purchasable and potential profit.</p>
+      <p><b class="big" id="payoff">$??</b> <span class="muted">potential payout &nbsp;|&nbsp; </span><span class="mono" id="shares"></span></p>
+      <button class="btn" onclick="calc()">Calculate</button>
+    </div>
+
+    <div class="card widget">
+      <h2>Custom Widget: Event Odds Visualizer</h2>
+      <label>Probability: <span id="probLabel">50%</span></label>
+      <input id="prob" type="range" min="0" max="100" value="50" oninput="sync()">
+      <p>Equivalent share price: <b id="priceLabel">$0.50</b></p>
+      <canvas id="bar" width="520" height="140" style="background:#0a1130;border-radius:12px;border:1px solid #21306b"></canvas>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Prebuilt Widget: Short explainer</h2>
+    <p class="muted">A concise intro to prediction markets (embedded video).</p>
+    <div style="aspect-ratio:16/9">
+      <iframe width="100%" height="100%" src="https://www.youtube.com/embed/29y0o8bK3jE" 
+        title="Prediction markets explainer" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <footer class="muted" style="padding:10px 0 30px 0">
+    <div>© PredictionMart — educational demo page</div>
+  </footer>
+</main>
+
+<script>
+function calc(){
+  const price = Math.min(1, Math.max(0, parseFloat(document.getElementById('price').value||0)));
+  const amt = Math.max(0, parseFloat(document.getElementById('amount').value||0));
+  const shares = price>0 ? Math.floor((amt/price)*100)/100 : 0;
+  const payout = shares * 1.0; // if correct
+  const profit = payout - shares*price;
+  document.getElementById('shares').textContent = shares + ' shares';
+  document.getElementById('payoff').textContent = '$' + (payout.toFixed(2)) + ' (+' + profit.toFixed(2) + ')';
+}
+
+function sync(){
+  const prob = parseInt(document.getElementById('prob').value,10);
+  document.getElementById('probLabel').textContent = prob+'%';
+  const price = (prob/100).toFixed(2);
+  document.getElementById('priceLabel').textContent = '$'+price;
+  drawBar(prob);
+}
+
+function drawBar(prob){
+  const c = document.getElementById('bar');
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0,0,c.width,c.height);
+  const w = c.width - 40, h = c.height - 40, x = 20, y = 20;
+  ctx.strokeStyle = '#3249d8'; ctx.lineWidth = 2; ctx.strokeRect(x,y,w,h);
+  const fillW = w * (prob/100);
+  ctx.fillStyle = '#4c66ff'; ctx.fillRect(x,y,fillW,h);
+  ctx.fillStyle = '#cde0ff'; ctx.font = '14px system-ui'; ctx.fillText(prob+'%', x+8, y+h/2+5);
+}
+
+window.addEventListener('load', ()=>{ sync(); calc(); });
+</script>
+</body>
+</html>
